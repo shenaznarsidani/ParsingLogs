@@ -22,7 +22,7 @@ The execution results in generation of Output files namely
 2. OutputTagCounts.csv
 
 **Test cases**:
-1. Test the functionality
+1. Tested the functionality
 2. Tested on a log file of size 12MB
 3. Tested with case sensitivity of the Protocol values
 4. Tried introducing invalid logs
