@@ -9,8 +9,8 @@ class Solution(object):
         self.logFile = logFile
         self.portProtocolCount = {}
         self.tagCount = {}
-        self.chunk_size = 256
-        self.maxThreads = 3
+        self.chunk_size = 1024
+        self.maxThreads = 5
         self.protocolMapping = {}
         self.lookupDict = {}
         self.mapProtocol()
@@ -21,7 +21,7 @@ class Solution(object):
             csvReader = csv.reader(file)
             for row in csvReader:
                 if row[0].isnumeric():
-                    self.protocolMapping[int(row[0])] = row[1]
+                    self.protocolMapping[int(row[0])] = row[1].strip().upper()
 
     def getLookup(self):
         with open(self.lookupFile, "r") as file:
@@ -40,6 +40,8 @@ class Solution(object):
             log = log.strip()
             if log:
                 tokens = log.split()
+                if(len(tokens)<14):
+                    continue
                 dstport,protocol_num = int(tokens[6]), int(tokens[7])
                 protocol = self.protocolMapping[protocol_num]
                 tag = self.lookupDict.get(protocol,{}).get(dstport,"Untagged")
@@ -78,7 +80,7 @@ class Solution(object):
             for tag, count in self.tagCount.items():
                 file.write(f"{tag},{count}\n")
 if(len(sys.argv)<4):
-    print("Please pass necessay arguments as mentioned in Readme file")
+    print("Please pass the necessary arguments as mentioned in Readme file")
     #protocolMappingFile, lookupFile, logFile = "protocol-numbers-1.csv", "Lookup.csv", "SampleLog.log"
 else:
     protocolMappingFile, lookupFile, logFile = sys.argv[1], sys.argv[2], sys.argv[3]
