@@ -2,6 +2,8 @@ import csv
 import threading
 import sys
 from concurrent.futures import ThreadPoolExecutor
+import functools
+
 class Solution(object):
     def __init__(self, protocolMappingFile, lookupFile, logFile):
         self.protocolMappingFile = protocolMappingFile
@@ -34,7 +36,11 @@ class Solution(object):
                     protocolDict = self.lookupDict.get(protocol, {})
                     protocolDict[dstport] = tag
                     self.lookupDict[protocol] = protocolDict
-    
+
+    @functools.lru_cache(maxsize=500)
+    def getTag(self, protocol, dstport):
+        return self.lookupDict.get(protocol,{}).get(dstport,"Untagged")
+
     def processChunk(self, logChunk):
         for log in logChunk:
             log = log.strip()
@@ -44,8 +50,7 @@ class Solution(object):
                     continue
                 dstport,protocol_num = int(tokens[6]), int(tokens[7])
                 protocol = self.protocolMapping[protocol_num]
-                tag = self.lookupDict.get(protocol,{}).get(dstport,"Untagged")
-
+                tag = self.getTag(protocol,dstport)
                 
                 with threading.Lock():
                     #Making count of Port Protocol Combination
