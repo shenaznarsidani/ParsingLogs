@@ -1,9 +1,9 @@
 # ParsingLogs
 
 ### ***Necessary Artifacts:***
-Protocol Numbers file(sample - protocol-numbers-1.csv) - Contains protocol encoding
-Lookup file(sample - Lookup.csv) - lookup for tag for a given protocol and destination port
-Input file(sample - SampleLog.log) - the log file which is to be processed.
+- Protocol Numbers file(sample - protocol-numbers-1.csv) - Contains protocol encoding
+- Lookup file(sample - Lookup.csv) - lookup for tag for a given protocol and destination port
+- Input file(sample - SampleLog.log) - the log file which is to be processed.
 
 
 ### ***Assumptions:***
@@ -12,8 +12,9 @@ Any invalid logs will be ignored.
 
 
 ### ***Implementation:***
-I have used Threads for parellel processing of the logs, limiting the thread count to 5, for faster processing of logs. 
-Each thread reads a chunk of not more than 1024 bytes of data to efficiently use the memory
+- I have used Threads for parellel processing of the logs, limiting the thread count to 5, for faster processing of logs. 
+- Each thread reads a chunk of not more than 1024 bytes of data to efficiently use the memory.
+- I have leveraged LRU(Least Recently Used) cache(of size 500) for the mappings.
 
 
 ### ***Execution:***
@@ -28,6 +29,8 @@ The execution results in generation of Output files namely
 1. OutputPortProtocolCounts.csv
 2. OutputTagCounts.csv
 
+### ***Observations:***
+The usage of threads and cache have significantly improved the execution time when compared to sequential processing approach.
 
 ### ***Test cases:***
 1. Tested the functionality
